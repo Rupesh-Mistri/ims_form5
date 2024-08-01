@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>INVENTORY</title>
+
+    <!-- Bootstrap CSS -->
+	
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+  </head>
+  <body onload="multiply();">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	    
+        <a class="navbar-brand" href="/">INVENTORY MANAGEMENT SYSTEM</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+
+
+        
+     
+        <div class="collapse navbar-collapse " id="navbarSupportedContent">
+         
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href='/item_master/item_master_list'>ITEM MASTER </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href='/supplier_master/supplier_master_list'>SUPPLIERS MASTER</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/purchase_master/purchase_master_list/">PURCHASE MASTER</a>
+  
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/sale_master/sale_master_list/">SALE MASTER</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="/report">REPORT</a>
+              </li>
+
+              
+          
+
+            {% comment %} {% if user.is_authenticated %}
+               <h2 class="text-success"> Hi {{ user.username }}! </h2>
+                <p><a  href="{% url 'logout' %}" >Log Out</a></p>
+              {% else %}
+                <p>You are not logged in</p>
+                <a href="{% url 'login' %}">Log In</a>
+              {% endif %}
+           {% endcomment %}
+          
+        </div>
+      </nav>
+
+      
+      {% for message in messages %} 
+      <h3 class="class alert alert-danger">{{message}}</h3>
+      {% endfor %}
+       
+      <div class="container ml-8 mt-5">
+        
+        
+      <h1 class="text-center">SALE MASTER</h1>
+       
+      <form action="" method="POST" id="sform1">
+         {% csrf_token %}
+        {% comment %}{{forms_sm}} {% endcomment %}
+        
+        
+       <div class="form-row">
+        <div class="form-group col-md-6" >
+          <label> {{forms_sm.transfer_no.label}}</label>
+          {{forms_sm.transfer_no}}
+        </div>
+        <div class="form-group col-md-6" >
+          <label> {{forms_sm.transfer_date.label}}</label>
+            {{forms_sm.transfer_date}}
+        </div>
+  
+       </div>
+       <div class="form-row">
+        <div class="form-group col-md-6" >
+          <label> {{forms_sm.customer_id.label}}</label>
+          {{forms_sm.customer_id}}
+        </div>
+        <div class="form-group col-md-6" >
+          <label>{{forms_sm.customer_address.label}}</label>
+          {{forms_sm.customer_address}}
+        </div>
+     </div> 
+     <center><button type="submit" name="savebtn" class="btn btn-primary"  >SAVE</button></center>
+
+    </form>
+
+    <form action="" method="POST" class="mt-2" id="sform2">
+      {% csrf_token %}
+      
+      
+        {% comment %} <span id='avail_qu'></span> {% endcomment %}
+        {% comment %} {{forms_sd.avail_qu}} {% endcomment %}
+     
+       
+       <div class="form-row">
+         <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">ITEM NAME</th>
+                  <th scope="col">RATE</th>
+                  {% comment %} <th scope="col">QUANTITY (AvaiLable Qty=<span id='savail_qu'></span>)</th>  {% endcomment %}
+                  <th scope="col">QUANTITY </th>
+                  <th scope="col">TOTAL</th>
+              </tr>
+          </thead>
+          <tbody>
+             <tr>
+                {% for fm in forms_sd %}
+                 <td onmouseover="multiply()">{{fm}}</td>
+                 {% endfor %}
+              </tr>
+           </tbody>
+          </table>
+      </div>     
+      <div class="container ml-8 ">
+        AvaiLable Quantity
+        <input type="text" name="avail_qu" class="form-control " id="avail_qu" >  
+        {{forms_sa}}
+      </div>
+      
+      <center><span id='jmessage' class='text-center text-danger'> </span></center>
+      <center><button type="submit" id="insert" name="addbtn" class="btn btn-primary mt-2"  name="submit">Add</button></center>
+      
+         
+      
+          
+          <section id="home" class="mt-5">
+              <div class="container">
+                  
+              
+                  <table class="table -hover table-success">
+      
+                      <thead>
+                          <tr>
+                              <th scope="col">SN</th>
+                              <th scope="col">ITEM NAME</th>
+                              <th scope="col">RATE</th>
+                              <th scope="col">QUANTITY </th>
+                              <th scope="col">TOTAL</th>
+                   
+                          </tr>
+                      </thead>
+                      <tbody>
+                  {% for r in allData %}
+      
+                              <tr>
+                                  <th>{{forloop.counter}}</th>
+                                  <td>{{r.item_name}}</td>
+                                  <td>{{r.rate}}</td>
+                                  <td>{{r.quantity}}</td>
+                                  <td>{{r.total}}</td>        
+                              </tr>
+                  {% endfor %}
+                  </tbody>
+                  </table>
+                 
+      
+              </div>
+              </section>
+           </div>	
+           
+
+        </form>
+        
+        <!--<button type="submit" class="btn btn-primary" name="submit">Save</button></center> -->
+       <!-- <center><a href="/insert_sale_n_temp_sale_details_insert_to_sale_d_n_delete"><button class="btn btn-danger">SAVE</button></a></center>-->
+        
+       
+   
+	  <div class="container-fluid bg-dark mx-0">
+  <footer class="py-3 my-3 mx-0">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+    </ul>
+    <p class="text-center text-muted">© 2021 Company, Inc</p>
+  </footer>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+   
+    {% comment %} $.ajax({
+             url: "/_get_data",
+             type: "POST",
+             success: function(resp){
+                 $('#item_id').html(resp.data);
+             }
+         }); {% endcomment %}
+      
+    
+    $('#id_item_id').change(function(){ 
+      
+      $.ajax({    //create an ajax request to fetchdata.php
+        type: "get",
+        url: "/sale_master/get_value_for_textbox_sale",             
+      
+        data: {un: $('#id_item_id').val()},             
+        success: function(resp){  
+           $("#rate").attr("value",resp);                  
+            //  alert(resp);
+           // $('#di').html(resp.data);
+          //  $("#rate").attr("value",resp.data); 
+            //alert(response);
+        }
+   
+      });
+    });
+
+
+
+    $('#id_item_id').change(function(){ 
+      
+      $.ajax({    
+        type: "get",
+        url: "/sale_master/get_value_for_stock_left_sale",             
+      
+        data: {un: $('#id_item_id').val()},             
+        success: function(resp){  
+            $("#avail_qu").attr("value",resp); //.text(resp)//.attr("value",resp);   
+            $("#savail_qu").text(resp)              
+            //  alert("AvaiLable Quantity "+resp);
+           // $('#di').html(resp.data);
+          //  $("#rate").attr("value",resp.data); 
+            //alert(response);
+        }
+   
+      });
+    });
+
+
+    $('#quantity').change(function(){ 
+       if ($('#quantity').val()<= $('#avail_qu').val() &&  $('#quantity').val()>=0)
+       {
+        $('#jmessage').text('Valid Quantity')
+       }
+       else
+        {
+          $('#jmessage').text('Invalid Quantity')
+        }
+
+    });
+  
+    
+  
+    function multiply()
+    {
+        var rate= document.getElementById("rate").value;
+         var quantity= document.getElementById("quantity").value;
+         var total=parseFloat(rate)*parseFloat(quantity);
+         document.getElementById("total").value=total;
+    }
+
+</script>
+  </body>
+</html>
